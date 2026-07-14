@@ -235,6 +235,58 @@ header {
   background: var(--border);
 }
 
+/* Compare Section */
+.compare-container {
+  background: var(--panel-bg);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.compare-container h3 {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.compare-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.compare-btn:hover {
+  background: var(--border);
+  color: #fff;
+}
+
+/* Store Brand Colors */
+.compare-btn[data-store="falabella"]:hover { border-color: #92B71A; color: #92B71A; }
+.compare-btn[data-store="ripley"]:hover { border-color: #5b287d; color: #b781e6; }
+.compare-btn[data-store="mercadolibre"]:hover { border-color: #ffe600; color: #facc15; }
+.compare-btn[data-store="wong"]:hover { border-color: #E60000; color: #ef4444; }
+.compare-btn[data-store="plazavea"]:hover { border-color: #D60C2C; color: #ef4444; }
+.compare-btn[data-store="tottus"]:hover { border-color: #6BB933; color: #4ade80; }
+.compare-btn[data-store="oechsle"]:hover { border-color: #E2001A; color: #ef4444; }
+.compare-btn[data-store="carsa"]:hover { border-color: #E1251B; color: #ef4444; }
+
 /* Ads Placeholder */
 .ads-container {
   margin-top: auto;

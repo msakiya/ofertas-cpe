@@ -155,6 +155,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  function cleanTitleForSearch(title) {
+    // Remove specific models or generic words that might mess up search
+    let t = title.toLowerCase();
+    t = t.replace(/celular|smartphone|tablet|tv|televisor|laptop/g, ''); // Optional, but usually better search with exact model
+    t = t.replace(/\d+gb|\d+tb/g, ''); // Removing capacity sometimes helps cross-store matching
+    return t.trim().substring(0, 50); // Take first 50 chars to avoid super long queries
+  }
+
+  // Handle Search Buttons
+  document.querySelectorAll('.compare-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!currentProductTitle) return;
+      
+      const query = encodeURIComponent(currentProductTitle.substring(0, 50));
+      const store = btn.getAttribute('data-store');
+      let searchUrl = '';
+
+      switch (store) {
+        case 'falabella': searchUrl = `https://www.falabella.com.pe/falabella-pe/search?Ntt=${query}`; break;
+        case 'ripley': searchUrl = `https://simple.ripley.com.pe/search/${query}`; break;
+        case 'wong': searchUrl = `https://www.wong.pe/search/?_query=${query}`; break;
+        case 'mercadolibre': searchUrl = `https://listado.mercadolibre.com.pe/${query}`; break;
+        case 'plazavea': searchUrl = `https://www.plazavea.com.pe/search/?_query=${query}`; break;
+        case 'tottus': searchUrl = `https://tottus.falabella.com.pe/tottus-pe/search?Ntt=${query}`; break;
+        case 'oechsle': searchUrl = `https://www.oechsle.pe/search/?_query=${query}`; break;
+        case 'carsa': searchUrl = `https://www.carsa.pe/search/?_query=${query}`; break;
+      }
+
+      if (searchUrl) {
+        chrome.tabs.create({ url: searchUrl, active: false }); // Open in background tab
+      }
+    });
+  });
+
   // Listen for tab changes to update panel
   chrome.tabs.onActivated.addListener(checkCurrentTab);
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
