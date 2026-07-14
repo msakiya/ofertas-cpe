@@ -147,6 +147,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         renderChart(history);
         showState('product');
+        
+        // Trigger background comparison search
+        startBackgroundSearch(product.title);
       });
 
     } catch (e) {
@@ -156,38 +159,108 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function cleanTitleForSearch(title) {
-    // Remove specific models or generic words that might mess up search
     let t = title.toLowerCase();
-    t = t.replace(/celular|smartphone|tablet|tv|televisor|laptop/g, ''); // Optional, but usually better search with exact model
-    t = t.replace(/\d+gb|\d+tb/g, ''); // Removing capacity sometimes helps cross-store matching
-    return t.trim().substring(0, 50); // Take first 50 chars to avoid super long queries
+    t = t.replace(/celular|smartphone|tablet|tv|televisor|laptop/g, ''); 
+    t = t.replace(/\d+gb|\d+tb/g, ''); 
+    return t.trim().substring(0, 50); 
   }
 
-  // Handle Search Buttons
-  document.querySelectorAll('.compare-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (!currentProductTitle) return;
+  const STORES = [
+    { id: 'falabella', name: 'Falabella', url: q => `https://www.falabella.com.pe/falabella-pe/search?Ntt=${q}` },
+    { id: 'ripley', name: 'Ripley', url: q => `https://simple.ripley.com.pe/search/${q}` },
+    { id: 'mercadolibre', name: 'M. Libre', url: q => `https://listado.mercadolibre.com.pe/${q}` },
+    { id: 'plazavea', name: 'PlazaVea', url: q => `https://www.plazavea.com.pe/search/?_query=${q}` },
+    { id: 'wong', name: 'Wong', url: q => `https://www.wong.pe/search/?_query=${q}` },
+    { id: 'tottus', name: 'Tottus', url: q => `https://tottus.falabella.com.pe/tottus-pe/search?Ntt=${q}` },
+    { id: 'oechsle', name: 'Oechsle', url: q => `https://www.oechsle.pe/search/?_query=${q}` },
+    { id: 'carsa', name: 'Carsa', url: q => `https://www.carsa.pe/search/?_query=${q}` }
+  ];
+
+  async function fetchStorePrice(store, query) {
+    const searchUrl = store.url(query);
+    const cardEl = document.getElementById(`card-${store.id}`);
+    const priceEl = cardEl.querySelector('.store-price');
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s timeout
+
+      const response = await fetch(searchUrl, {
+        headers: {
+          'Accept': 'text/html,application/xhtml+xml,application/xml',
+          'User-Agent': navigator.userAgent
+        },
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) throw new Error('Blocked');
+
+      const html = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+
+      let priceStr = null;
+
+      // Extractors
+      if (store.id === 'mercadolibre') {
+        const el = doc.querySelector('.poly-price__current .andes-money-amount__fraction');
+        if (el) priceStr = el.innerText;
+      } else if (store.id === 'ripley') {
+        const el = doc.querySelector('.catalog-product-details__discount-price, .catalog-prices__offer-price');
+        if (el) priceStr = el.innerText;
+      } else if (['plazavea', 'wong', 'oechsle', 'carsa'].includes(store.id)) {
+        const el = doc.querySelector('.plugin-preco .skuBestPrice, .PriceText, .BestPrice');
+        if (el) priceStr = el.innerText;
+      } else {
+        // Generic fallback regex
+        const match = html.match(/S\/\s*([\d,]+(\.\d+)?)/);
+        if (match) priceStr = match[1];
+      }
+
+      if (priceStr) {
+        const val = priceStr.replace(/[^\d.,]/g, '');
+        priceEl.innerHTML = `S/ ${val}`;
+      } else {
+        throw new Error('Not found');
+      }
+
+    } catch (e) {
+      priceEl.innerHTML = `
+        <div class="store-price error">Bloqueado 🔒</div>
+      `;
+      priceEl.insertAdjacentHTML('afterend', `<button class="card-btn" data-url="${searchUrl}">Ver manual</button>`);
       
-      const query = encodeURIComponent(currentProductTitle.substring(0, 50));
-      const store = btn.getAttribute('data-store');
-      let searchUrl = '';
+      cardEl.querySelector('.card-btn').addEventListener('click', (ev) => {
+        chrome.tabs.create({ url: ev.target.getAttribute('data-url'), active: false });
+      });
+    }
+  }
 
-      switch (store) {
-        case 'falabella': searchUrl = `https://www.falabella.com.pe/falabella-pe/search?Ntt=${query}`; break;
-        case 'ripley': searchUrl = `https://simple.ripley.com.pe/search/${query}`; break;
-        case 'wong': searchUrl = `https://www.wong.pe/search/?_query=${query}`; break;
-        case 'mercadolibre': searchUrl = `https://listado.mercadolibre.com.pe/${query}`; break;
-        case 'plazavea': searchUrl = `https://www.plazavea.com.pe/search/?_query=${query}`; break;
-        case 'tottus': searchUrl = `https://tottus.falabella.com.pe/tottus-pe/search?Ntt=${query}`; break;
-        case 'oechsle': searchUrl = `https://www.oechsle.pe/search/?_query=${query}`; break;
-        case 'carsa': searchUrl = `https://www.carsa.pe/search/?_query=${query}`; break;
-      }
+  function startBackgroundSearch(title) {
+    const query = encodeURIComponent(cleanTitleForSearch(title));
+    const grid = document.getElementById('compare-grid');
+    grid.innerHTML = ''; // Clear previous
 
-      if (searchUrl) {
-        chrome.tabs.create({ url: searchUrl, active: false }); // Open in background tab
-      }
+    STORES.forEach(store => {
+      // Build Card
+      const cardHTML = `
+        <div class="store-card" id="card-${store.id}" data-store="${store.id}">
+          <div class="store-name">${store.name}</div>
+          <div class="store-price">
+            <div class="mini-spinner"></div>
+          </div>
+        </div>
+      `;
+      grid.insertAdjacentHTML('beforeend', cardHTML);
     });
-  });
+
+    // Start Fetching in parallel
+    STORES.forEach(store => {
+      fetchStorePrice(store, query);
+    });
+  }
 
   // Listen for tab changes to update panel
   chrome.tabs.onActivated.addListener(checkCurrentTab);

@@ -257,35 +257,81 @@ header {
   gap: 8px;
 }
 
-.compare-btn {
+.store-card {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-align: center;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.store-card:hover {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: var(--text-muted);
+}
+
+.store-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-muted);
+}
+
+.store-price {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  min-height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
-  background: transparent;
-  color: var(--text-main);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 0.75rem;
+}
+
+.store-price.error {
+  font-size: 0.7rem;
+  color: #ef4444;
   font-weight: 500;
+}
+
+.mini-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.card-btn {
+  margin-top: 8px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 4px;
+  padding: 4px 0;
+  font-size: 0.65rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.compare-btn:hover {
+.card-btn:hover {
   background: var(--border);
   color: #fff;
 }
 
-/* Store Brand Colors */
-.compare-btn[data-store="falabella"]:hover { border-color: #92B71A; color: #92B71A; }
-.compare-btn[data-store="ripley"]:hover { border-color: #5b287d; color: #b781e6; }
-.compare-btn[data-store="mercadolibre"]:hover { border-color: #ffe600; color: #facc15; }
-.compare-btn[data-store="wong"]:hover { border-color: #E60000; color: #ef4444; }
-.compare-btn[data-store="plazavea"]:hover { border-color: #D60C2C; color: #ef4444; }
-.compare-btn[data-store="tottus"]:hover { border-color: #6BB933; color: #4ade80; }
-.compare-btn[data-store="oechsle"]:hover { border-color: #E2001A; color: #ef4444; }
-.compare-btn[data-store="carsa"]:hover { border-color: #E1251B; color: #ef4444; }
+/* Store Brand Colors (Top border highlight) */
+.store-card[data-store="falabella"] { border-top: 3px solid #92B71A; }
+.store-card[data-store="ripley"] { border-top: 3px solid #5b287d; }
+.store-card[data-store="mercadolibre"] { border-top: 3px solid #ffe600; }
+.store-card[data-store="wong"] { border-top: 3px solid #E60000; }
+.store-card[data-store="plazavea"] { border-top: 3px solid #D60C2C; }
+.store-card[data-store="tottus"] { border-top: 3px solid #6BB933; }
+.store-card[data-store="oechsle"] { border-top: 3px solid #E2001A; }
+.store-card[data-store="carsa"] { border-top: 3px solid #E1251B; }
 
 /* Ads Placeholder */
 .ads-container {
