@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Ofertas CPE",
+  "version": "1.0.0",
+  "description": "Historial de precios de tiendas online en Perú. Compara y encuentra la mejor oferta.",
+  "author": "Moisés Sakiyama Freyre - Comunidadcpe.com",
+  "permissions": [
+    "sidePanel",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/panel.html"
+  },
+  "action": {
+    "default_title": "Abrir Ofertas CPE"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

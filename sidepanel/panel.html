@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ofertas CPE</title>
+  <link rel="stylesheet" href="panel.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="chart.umd.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <span class="logo-icon">💰</span>
+        <h1>Ofertas CPE</h1>
+      </div>
+      <p class="subtitle">por Moisés Sakiyama Freyre</p>
+    </header>
+
+    <main id="main-content">
+      <div id="loading" class="state-container">
+        <div class="spinner"></div>
+        <p>Buscando precios...</p>
+      </div>
+
+      <div id="no-product" class="state-container hidden">
+        <div class="icon-large">🛒</div>
+        <h2>Navega en una tienda</h2>
+        <p>Abre el producto en una tienda online (ej. Falabella, Ripley, etc.) para ver su historial.</p>
+      </div>
+
+      <div id="product-view" class="hidden">
+        <div class="product-header">
+          <img id="product-image" src="" alt="Producto" onerror="this.style.display='none'">
+          <div class="product-info">
+            <h2 id="product-title">Nombre del Producto</h2>
+            <div class="price-container">
+              <span class="currency" id="product-currency">S/</span>
+              <span class="price" id="product-price">0.00</span>
+            </div>
+            <p class="domain" id="product-domain">tienda.com</p>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <h3>Historial de Precios</h3>
+          <canvas id="priceChart"></canvas>
+        </div>
+
+        <div class="actions">
+          <button id="btn-knasta" class="btn primary">
+            <span class="btn-icon">🔍</span> Buscar en Knasta
+          </button>
+          <button id="btn-compy" class="btn secondary">
+            <span class="btn-icon">🔍</span> Buscar en Compy
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Espacio para monetización futura -->
+    <div class="ads-container">
+      <div class="ads-placeholder">
+        <span class="ads-text">Espacio para Publicidad / Afiliados</span>
+        <span class="ads-subtext">Tu ID de AdSense irá aquí</span>
+      </div>
+    </div>
+  </div>
+  <script src="panel.js"></script>
+</body>
+</html>
