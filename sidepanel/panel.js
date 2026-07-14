@@ -9,9 +9,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const imageEl = document.getElementById('product-image');
   const domainEl = document.getElementById('product-domain');
   
-  const btnKnasta = document.getElementById('btn-knasta');
-  const btnCompy = document.getElementById('btn-compy');
-  
   let currentProductTitle = "";
   let priceChart = null;
 
@@ -157,21 +154,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       showState('noproduct');
     }
   }
-
-  // Handle Search Buttons
-  btnKnasta.addEventListener('click', () => {
-    if (currentProductTitle) {
-      const query = encodeURIComponent(currentProductTitle);
-      chrome.tabs.create({ url: `https://knasta.pe/resultados?q=${query}` });
-    }
-  });
-
-  btnCompy.addEventListener('click', () => {
-    if (currentProductTitle) {
-      const query = encodeURIComponent(currentProductTitle);
-      chrome.tabs.create({ url: `https://compy.pe/search?q=${query}` });
-    }
-  });
 
   // Listen for tab changes to update panel
   chrome.tabs.onActivated.addListener(checkCurrentTab);

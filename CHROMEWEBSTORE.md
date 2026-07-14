@@ -9,11 +9,10 @@ Historial de precios de tiendas online en Perú. Compara, encuentra la mejor ofe
 ## Detailed Description
 **Ofertas CPE** es tu asistente de compras ideal para el comercio electrónico en Perú. Creado por **Moisés Sakiyama Freyre de Comunidadcpe.com**, esta extensión gratuita te permite conocer la evolución del precio de un producto a lo largo del tiempo. 
 
-¿Cansado de dudar si una oferta es realmente buena? Con Ofertas CPE, cada vez que visites una tienda online, la extensión analizará automáticamente el precio y lo guardará en un historial privado local. Así, cuando vuelvas a visitar el producto, podrás ver una gráfica clara de cómo ha cambiado su valor y decidir si es el mejor momento para comprar, o buscar ese mismo producto en servicios como Knasta o Compy.
+¿Cansado de dudar si una oferta es realmente buena? Con Ofertas CPE, cada vez que visites una tienda online, la extensión analizará automáticamente el precio y lo guardará en un historial privado local. Así, cuando vuelvas a visitar el producto, podrás ver una gráfica clara de cómo ha cambiado su valor y decidir si es el mejor momento para comprar.
 
 ### Características:
 - **Gráfico de historial de precios:** Observa la tendencia y asegura tu ahorro.
-- **Búsqueda rápida:** Encuentra fácilmente el producto en comparadores peruanos.
 - **Privacidad primero:** Todo tu historial se guarda localmente en tu navegador.
 - **Diseño Premium:** Interfaz moderna y modo oscuro nativo.
 
