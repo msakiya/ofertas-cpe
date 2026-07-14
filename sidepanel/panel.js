@@ -227,9 +227,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
     } catch (e) {
-      priceEl.innerHTML = `
-        <div class="store-price error">Bloqueado 🔒</div>
-      `;
+      if (e.message === 'Blocked' || e.message === 'Failed to fetch') {
+        priceEl.innerHTML = `<div class="store-price error">Bloqueado 🔒</div>`;
+      } else {
+        priceEl.innerHTML = `<div class="store-price error" style="color: var(--text-muted);">No encontrado</div>`;
+      }
+      
       priceEl.insertAdjacentHTML('afterend', `<button class="card-btn" data-url="${searchUrl}">Ver manual</button>`);
       
       cardEl.querySelector('.card-btn').addEventListener('click', (ev) => {
